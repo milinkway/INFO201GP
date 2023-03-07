@@ -18,8 +18,7 @@ ui <- navbarPage(
   # Creating the multi-pages website:
   # The home page
   tabPanel("Home", 
-           tags$img(src = "image/image.jpg", 
-                    height = "2508px", width = "804px"),
+           imageOutput("image"),
            
            htmlOutput("description1"),
            
@@ -266,6 +265,14 @@ ui <- navbarPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   # The home page
+  # image
+  output$image <- renderImage({
+    list(src = "image/image.jpg",
+         width = 1200,
+         height = 400)
+  }, deleteFile = FALSE)
+  
+  # descriptions 
   output$description1 <- renderText("The report provides a observation of
     suicide rate based on countries by different factors. 
     With the results, we hope to display 
