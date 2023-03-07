@@ -18,29 +18,38 @@ ui <- navbarPage(
   # Creating the multi-pages website:
   # The home page
   tabPanel("Home", 
+           # Image
+           br(),
            imageOutput("image"),
            
+           # Titles and Descriptions 
+           h1("World Suicide Rate Report"),
            htmlOutput("description1"),
+           tags$head(tags$style("#description1{font-size: 18px;}")),
+           br(),
            
            textOutput("title2"),
-           tags$head(tags$style("#title2{font-size: 23px;}")),
+           tags$head(tags$style("#title2{font-size: 28px;}")),
            htmlOutput("description2"),
+           br(),
            
-           tags$head(tags$style("#description2{font-size: 13px;}")),
+           tags$head(tags$style("#description2{font-size: 18px;}")),
            textOutput("title3"),
-           tags$head(tags$style("#title3{font-size: 23px;}")),
+           tags$head(tags$style("#title3{font-size: 28px;}")),
            htmlOutput("description3"),
+           br(),
            
-           tags$head(tags$style("#description3{font-size: 13px;}")),
+           tags$head(tags$style("#description3{font-size: 18px;}")),
            textOutput("title4"),
-           tags$head(tags$style("#title4{font-size: 23px;}")),
+           tags$head(tags$style("#title4{font-size: 28px;}")),
            htmlOutput("description4"),
+           br(),
            
-           tags$head(tags$style("#description4{font-size: 13px;}")),
+           tags$head(tags$style("#description4{font-size: 18px;}")),
            textOutput("title5"),
-           tags$head(tags$style("#title5{font-size: 23px;}")),
+           tags$head(tags$style("#title5{font-size: 28px;}")),
            htmlOutput("description5"),
-           tags$head(tags$style("#description5{font-size: 13px;}"))),
+           tags$head(tags$style("#description5{font-size: 18px;}"))),
   
   # First interactive page about all_age suicide rates
   tabPanel("Suicide Rates over Time",
@@ -52,8 +61,11 @@ ui <- navbarPage(
              sidebarPanel(
                p("On this page, we can see the different countries'",
                  strong("suicide rate"),
-                 "list by year."),
+                 "list by year. Also, you could learn which country has 
+                 the", strong("highest"), "suicide rates in each year."),
                br(),
+               
+               # choosing the country for plot and table 1
                p("This widget can let you choose the", em("countries"),
                  "that you are interested in."),
                selectInput("country",
@@ -61,6 +73,8 @@ ui <- navbarPage(
                            choices = unique(data2$Country),
                            multiple = TRUE,
                            selected = "Afghanistan"),
+               
+               # select the year range for plot and table 1
                p("You can operate this widget to choose", 
                  em("year range"),),
                sliderInput("year",
@@ -70,6 +84,8 @@ ui <- navbarPage(
                            value = c(min(data2$Year, na.rm = TRUE),
                                      max(data2$Year, na.rm = TRUE))),
                br(),
+               
+               # select if you want the trend line for plot
                p("You can choose if you want the", em("trend line"),
                  "on the plot here."),
                radioButtons("type",
@@ -81,17 +97,24 @@ ui <- navbarPage(
              
              # main Panel
              mainPanel(
+               # set as tab sets
                tabsetPanel(type = "tabs",
+                           
+                           # plot panel
                            tabPanel("Plot", 
                                     br(),
                                     textOutput("text"),
                                     plotOutput("time")),
+                           
+                           # table panel sets
                            navbarMenu("Table", 
+                                      # table 1
                                       tabPanel("Average Suicide Rate 
                                                over Year for Countries",
                                                br(),
                                                textOutput("texts"),
                                                tableOutput("times")),
+                                      # table 2
                                       tabPanel("Highest Suicide Rate 
                                                for Each Year",
                                                br(),
@@ -100,6 +123,8 @@ ui <- navbarPage(
                                                  suicide rates over the year."),
                                                tableOutput("highest"))
                            ),
+                           
+                           # summary panel
                            tabPanel("Summary", 
                                     br(),
                                     p("As table showed from previous tab, 
@@ -143,14 +168,17 @@ ui <- navbarPage(
            sidebarLayout(
              # Sidebar panel
              sidebarPanel(
-               p("You can analyze the suicide rate for different sex.
-               Select the year you are interested in.
-               You can see the bar chart on this page that 
-               show the strong relationship 
-               between Suicide Rate and different sex.
-                 You can see which sex has the 
-                 higher suicide rate in each year"),
-               br(),
+               p("You can analyze the suicide rate for", em("different sex"),
+                 "on this page. By interact with the bar chart you can see 
+                 which sex has the", strong("higher"),
+                 "suicide rate in each year"),
+               br(), 
+               
+               # selecting the year for bar chart
+               p("Select the", strong ("year"), 
+               "you are interested in. You can see the bar chart 
+               on this page that show the", em("strong relationship"), 
+               "between Suicide Rate and different sex."),
                uiOutput("radioButtons_year")
              ),
              
@@ -158,12 +186,18 @@ ui <- navbarPage(
              mainPanel(
                textOutput("sex_text1"),
                br(),
+               
+               # table 1
                textOutput("sex_text2"),
                tableOutput("Table_sex"),
                br(),
+               
+               # plot
                textOutput("sex_text3"),
                plotOutput("Histo_sex"),
                br(),
+               
+               # table 2 and summary
                textOutput("sex_text5"),
                br(),
                textOutput("sex_text4"),
@@ -182,10 +216,11 @@ ui <- navbarPage(
            sidebarLayout(
              # Sidebar panel
              sidebarPanel(
-               br(),
                p("On this page, you can see the availability of the 
                mental health service facilities by country."),
                br(),
+               
+               # choosing the service you would like to see on plot and table
                p("By choosing the variables you can see the 
                  comparision between each country."),
                radioButtons("variable",
@@ -200,15 +235,19 @@ ui <- navbarPage(
              
              # main Panel
              mainPanel(
+               # set as tab sets
                tabsetPanel(type = "tabs",
+                           # plot
                            tabPanel("Plot", 
                                     br(),
                                     textOutput("message"),
                                     plotOutput("bplot")),
+                           # table
                            tabPanel("Table",
                                     br(),
                                     textOutput("messages"),
                                     tableOutput("tables")),
+                           # summary
                            tabPanel("Summary",
                                     p("From the plot, 
                                       we can see there still a lot of ",
@@ -268,8 +307,8 @@ server <- function(input, output) {
   # image
   output$image <- renderImage({
     list(src = "image/image.jpg",
-         width = 1200,
-         height = 400)
+         width = 900,
+         height = 300)
   }, deleteFile = FALSE)
   
   # descriptions 
@@ -391,11 +430,14 @@ server <- function(input, output) {
   
   
   # Second interactive page about suicide rates over sex
+  # set the choice for radiobuttons
   output$radioButtons_year <- renderUI({
     radioButtons( "num","Year:",
                   choices = c(sort(unique(data2$Year))),
                   selected = "2000")
   })
+  
+  # text message on the main panel
   output$sex_text1 <- renderText({
     paste("The table on this page show the strong relationship 
           between suicide rate and different sex in each year.")
@@ -403,18 +445,24 @@ server <- function(input, output) {
   output$sex_text2 <- renderText({
     paste("Table of suicide rate with different sex in", input$num)
   })
+  
+  # filter data for table 1 and plot
   sex_year <- reactive({
     data2 %>%
       filter(Year %in% input$num)%>%
       group_by(Year, Sex)%>%
       summarize(suicide_rate = mean(Numeric), .groups = "drop")
   })
+  
+  # table
   output$Table_sex <- renderTable({
     sex_year()
   })
   output$sex_text3 <- renderText({
     paste("Bar Chart of suicide rate with different sex in", input$Year,":")
   })
+  
+  # plot
   output$Histo_sex <- renderPlot({
     sex_year() %>%
       ggplot(aes(x = Sex, y = suicide_rate, fill = Sex))+
@@ -427,21 +475,27 @@ server <- function(input, output) {
     paste("Here is the table to summarize 
           the average suicide rate of each sex:")
   })
+  
+  # filter data for table 2
   avg_sex <- reactive({
     data2%>%
       group_by(Sex)%>%
       summarize(Average_suicide_rate = mean(Numeric))
   })
+  
+  # table
   output$Table_allsex <- renderTable({
     avg_sex()
   })
+  
+  # summary 
   output$sex_text5 <- renderText({
-    paste("comparing the table and the histogram, 
-    we found that relationship between suicide rate and different sex. 
-    Female's suicide rate is lower than Male's suicde rate in every year.
+    paste("Comparing the table and the histogram, 
+    we found that relationship between suicide rate and different sex.")
+    paste("Female's suicide rate is lower than Male's suicde rate in every year.
     Female's suicide rate is lower than the average suicide rate of both sexes.
-          Male's suicide rate is higher than the 
-          average suicide rate of both sexes in every year.")
+    Male's suicide rate is higher than the average 
+          suicide rate of both sexes in every year.")
   })
   
   # Third interactive page about 
@@ -451,7 +505,8 @@ server <- function(input, output) {
   output$message <- renderText({
     paste("You have choose", input$variable, "to show in the plot.")
   })
-  # plot
+  # plot panel
+  # plot data 
   data <- reactive({
     data1 %>% 
       rename(hospitals = colnames(data1)[3], 
@@ -460,7 +515,9 @@ server <- function(input, output) {
              treatment = colnames(data1)[6], 
              community = colnames(data1)[7])
   })
+  # plot
   output$bplot <- renderPlot({
+    # set ylab for reducing the repeat code
     ylab <- switch(input$variable,
                    "Mental health unit in hospitals" = 
                      "Mental health units in general hospitals 
@@ -477,6 +534,7 @@ server <- function(input, output) {
                    "Hospitals" = 
                      "Mental Hospitals (per 100,000 population)")
     
+    # set data for reducing the repeat code
     plot_data <- switch(input$variable,
                         "Mental health unit in hospitals" = data()$units,
                         "Outpatient" = data()$outpatient,
@@ -484,6 +542,7 @@ server <- function(input, output) {
                         "Community facilities" = data()$community,
                         "Hospitals" = data()$hospitals)
     
+    # bar chart
     barplot(plot_data, names.arg = data()$Country, 
             xlab = "Country", ylab = ylab, 
             main = paste0("Global ", input$variable, " status"))
@@ -500,6 +559,7 @@ server <- function(input, output) {
       na.exclude() %>% 
       select(Country, hospitals, units, outpatient, treatment, community) 
     
+    # set data for reducing the repeat code
     plot_data <- switch(input$variable,
                         "Mental health unit in hospitals" = dataset$units,
                         "Outpatient" = dataset$outpatient,
@@ -507,6 +567,7 @@ server <- function(input, output) {
                         "Community facilities" = dataset$community,
                         "Hospitals" = dataset$hospitals)
     
+    # print the table
     sorted_data <- dataset[order(plot_data, decreasing = TRUE), ]
     head(sorted_data, 5)
   })
