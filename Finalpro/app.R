@@ -17,7 +17,7 @@ ui <- navbarPage(
   
   # Creating the multi-pages website:
   # The home page
-  tabPanel("Home", 
+  tabPanel("Project Overview", 
            # Image
            br(),
            imageOutput("image"),
@@ -161,7 +161,7 @@ ui <- navbarPage(
            )),
   
   # Second interactive page about 15-19yrs suicide rates
-  tabPanel("Suicide Rates over Sex",
+  tabPanel("Suicide Rates between Sex",
            h3("World-wide Suicide Rate over ", strong("Sex"), "Analysis"),
            
            # Create side bar layout
