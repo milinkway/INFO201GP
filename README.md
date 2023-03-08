@@ -1,6 +1,7 @@
 # INFO201GP User Document
 
 Here is the link to the project:
+https://milinkway.shinyapps.io/FinalProject-BB1/
 
 ### Project member:
 

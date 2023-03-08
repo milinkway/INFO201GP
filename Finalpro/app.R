@@ -298,7 +298,66 @@ ui <- navbarPage(
            )),
   
   # The conclusion page
-  tabPanel("Conclusion")
+  tabPanel("Conclusion",
+           h2("Conclusion for the report"),
+           
+           # table 1
+           p("The average suicide rate of countries with the",
+             strong("rarest"), "of each mental health service:"),
+           tableOutput("conclusion_table1"),
+           
+           # table 2
+           p("The average suicide rate of countries with the ", 
+             strong("most"), " of each mental health service:"),
+           tableOutput("conclusion_table2"),
+           br(),
+           
+           # Analysis
+           h3("Data analysis"),
+           p("- From our data, we found that even though the suicide rate is  ", 
+             strong("decreased"), " by each year, ", em("different sex"), " 
+             has the impact on suicide rate, and the suicide rate also impact 
+             some of  ", em("mental health facility services"), ". To be 
+             more specific,  ", em("male"), " has  ", strong("higher"), 
+             " suicide rate than  ", em("Female"), 
+             " which can be seen in the plot in the  ", 
+             em("Suicide Rate and Sex"), " tab.
+             Also, from the table above, we found that the countries with  ",
+             strong("rarest"), " service have  ",  em("lower"), "
+             suicide rate, but countries with  ", strong("most"), 
+             " of service have  ", em("higher"), " suicide rate because 
+             countries with  ", em("high"), " suicide rates have a  ", 
+             strong("greater"), " need for mental health hospital, mental health
+             units, mental health outpatient facilities and day treatment 
+             facilities to care for their populations to  ",
+             strong("reduce"), " suicide rates. 
+             However, It may be difficult to implement changes that 
+             request governments to  ", em("increase"), " support to", 
+             strong("reduce"), " suicide rates in countries that 
+             lack mental health-related facilities. 
+             But through the data we can see that the suicide rate is  ", 
+             em("decreasing"), " every year, which is a  ",
+             strong("desirable trend.")),
+           p("- Although the datasets from World Suicide Report 
+             by the World Health Organization are ", 
+             strong("reasonable and unbiased"), " , there is ", 
+             em("coverage error"), " in the dataset that the dataset 
+             of Facilities has many ", strong("missing values"), 
+             " , which means there are still many countries are experiencing ", 
+             strong("lack of service"), " for mental health or lack of data 
+             focus on these countries. This may lead to a continued ", 
+             strong("lack of improvement"), " in the construction of ", 
+             em("mental health services"), "  in these areas to rapidly ", 
+             strong("reduce"), " suicide rates."),
+           p("- With this project, we wanted to ", strong("target"), 
+             " general population, schools, and governments to ", 
+             strong("provide support"), " for ", em("weak"), 
+             " mental health people. With additional research and data of 
+             the specific country and reason of suicide, 
+             the project may be able to showcase to our targets to ", 
+             em("give support"), "that will ", 
+             strong("improve to decrease"), 
+             " suicide rate and people's mental health."))
 )
 
 # Define server logic required to draw a histogram
@@ -323,14 +382,13 @@ server <- function(input, output) {
   
   output$title2 <- renderText("Audience")
   output$description2 <- renderText("We believe that anyone in the 
-    global population can benefit from this report, 
-    since learning about severe mental health problems, 
-    improving self-awareness, and trying to resolve are important to 
-    reduce suicide rate. The general population can gain the first one 
-    by reading our data and analysis, 
-    yet the latter two require our target audience, 
+  global population can benefit from this report, since learning 
+  about severe mental health problems, improving self-awareness, 
+  and trying to resolve them are important to reduce the suicide rate. 
+  The general population can gain the first one by reading our data and 
+  analysis, yet the latter two require our target audience, 
     who are <b>schools and governments able to provide education 
-    and support to weak mental health adolescences</b>, to provide support.")
+                                    and support to weak mental health</b>.")
   
   output$title3 <- renderText("Dataset")
   output$description3 <- renderText({
@@ -573,6 +631,32 @@ server <- function(input, output) {
   })
 
   # The conclusion page
+  # filter data for avg
+  avg_Numeric_data <- reactive({
+    data2 %>%
+      group_by(Country)%>%
+      summarize(avg_suicide_rate = mean(Numeric))
+  })
+  # data 1
+  smallest <- reactive({
+    avg_Numeric_data()%>%
+      filter(Country %in% c("Tonga","Mexico", "Afghanistan", 
+                            "Philippines", "Guatemala"))
+  })
+  # data 2
+  largest <- reactive({
+    avg_Numeric_data()%>%
+      filter(Country %in% c("Japan", "Ghana", "Estonia",
+                            "Estonia", "Greece"))
+  })
+  # table 1
+  output$conclusion_table1 <- renderTable({
+    smallest()
+  })
+  # table 2
+  output$conclusion_table2 <- renderTable({
+    largest()
+  })
 }
 
 # Run the application 
