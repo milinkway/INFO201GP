@@ -176,10 +176,10 @@ ui <- navbarPage(
                
                # selecting the year for bar chart
                p("Select the", strong ("year"), 
-               "you are interested in. You can see the bar chart 
+               "you are interested in. You can see the histogram 
                on this page that show the", em("strong relationship"), 
                "between Suicide Rate and different sex."),
-               uiOutput("radioButtons_year")
+               uiOutput("selectInput_year")
              ),
              
              # main Panel
@@ -479,7 +479,7 @@ server <- function(input, output) {
     filter_data() %>% 
       select(Year, Country, Numeric) %>% 
       group_by(Year, Country) %>% 
-      summarize(mean = mean(Numeric)) %>% 
+      summarize(mean = mean(Numeric), .groups = "drop") %>% 
       arrange(Year, desc(mean)) %>% 
       group_by(Year) %>% 
       slice(1) %>% 
@@ -489,8 +489,8 @@ server <- function(input, output) {
   
   # Second interactive page about suicide rates over sex
   # set the choice for radiobuttons
-  output$radioButtons_year <- renderUI({
-    radioButtons( "num","Year:",
+  output$selectInput_year <- renderUI({
+    selectInput( "num","Select a year:",
                   choices = c(sort(unique(data2$Year))),
                   selected = "2000")
   })
@@ -517,7 +517,7 @@ server <- function(input, output) {
     sex_year()
   })
   output$sex_text3 <- renderText({
-    paste("Bar Chart of suicide rate with different sex in", input$Year,":")
+    paste("Histogram of suicide rate with different sex in", input$Year,":")
   })
   
   # plot
