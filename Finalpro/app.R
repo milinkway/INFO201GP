@@ -110,7 +110,8 @@ ui <- navbarPage(
                            navbarMenu("Table", 
                                       # table 1
                                       tabPanel("Average Suicide Rate 
-                                               over Year for Countries",
+                                               over 2000 - 
+                                               2019 for Countries",
                                                br(),
                                                textOutput("texts"),
                                                tableOutput("times")),
@@ -462,15 +463,13 @@ server <- function(input, output) {
   output$texts <- renderText({
     countries <- paste(input$country, collapse = ", ")
     paste("Here is presenting the Avereage Suicise Rate of",
-          countries, "between",
-          input$year[1], "to", 
-          input$year[2], ".")
+          countries, "between 2000 to 2019.")
   })
   # first table
   output$times <- renderTable({
-    filter_data() %>% 
+    data2 %>% 
       filter(Country %in% input$country) %>% 
-      group_by(Year, Country) %>% 
+      group_by(Country) %>% 
       summarize(mean =  mean(Numeric), .groups = "drop")
   })
   
@@ -488,7 +487,7 @@ server <- function(input, output) {
   
   
   # Second interactive page about suicide rates over sex
-  # set the choice for radiobuttons
+  # set the choice for select box
   output$selectInput_year <- renderUI({
     selectInput( "num","Select a year:",
                   choices = c(sort(unique(data2$Year))),
